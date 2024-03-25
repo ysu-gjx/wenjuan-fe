@@ -1,0 +1,12 @@
+.list-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 16px;
+  .published-span {
+    color: green;
+  }
+}
+
+.published {
+  border-color: green;
+}
