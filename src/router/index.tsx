@@ -1,9 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import MainLayout from '@/layouts/MainLayout'
 import Home from '@/pages/Home'
 import Login from '@/pages/Login'
-import Register from '@/pages/Register'
+import Register from '@/pages/Login/Register'
 import NotFound from '@/pages/NotFound'
 import ManageLayout from '@/layouts/ManageLayout'
 import List from '@/pages/manage/List'
@@ -49,8 +49,12 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: '*',
+        path: '/404',
         element: <NotFound />,
+      },
+      {
+        path: '*',
+        element: <Navigate to="/404" />,
       },
     ],
   },

@@ -1,56 +1,71 @@
 import { useState } from 'react'
-import QuestionCard from '../../components/QuestionCard'
+import QuestionCard from '@/components/QuestionCard'
 import { produce } from 'limu'
+import { Button, Typography } from 'antd'
+import styles from './common.module.scss'
+import { useTitle } from 'ahooks'
+import ListSearch from '@/components/ListSearch'
+
+const { Title } = Typography
+
+const rawQuestionList = [
+  {
+    _id: 'q1',
+    title: '问卷1',
+    isPublished: false,
+    isStar: false,
+    answerCount: 1,
+    createdAt: '2022-01-01 00:00:00',
+  },
+  {
+    _id: 'q2',
+    title: '问卷2',
+    isPublished: true,
+    isStar: true,
+    answerCount: 3,
+    createdAt: '2022-01-01 00:00:00',
+  },
+  {
+    _id: 'q3',
+    title: '问卷3',
+    isPublished: false,
+    isStar: false,
+    answerCount: 1,
+    createdAt: '2022-01-01 00:00:00',
+  },
+  {
+    _id: 'q4',
+    title: '问卷4',
+    isPublished: true,
+    isStar: true,
+    answerCount: 3,
+    createdAt: '2022-01-01 00:00:00',
+  },
+]
 
 const Index: React.FC = () => {
-  const [questionList, setQuestionList] = useState([
-    { id: 'q1', title: '问卷1', isPublished: false },
-    { id: 'q2', title: '问卷2', isPublished: true },
-    { id: 'q3', title: '问卷3', isPublished: false },
-    { id: 'q4', title: '问卷4', isPublished: true },
-  ])
+  useTitle('yg问卷 - 问卷列表页')
+  const [questionList, setQuestionList] = useState(rawQuestionList)
 
-  const delQuestion = (id: string) => {
-    setQuestionList(questionList.filter((t) => t.id !== id))
-  }
-  const publish = (id: string) => {
-    setQuestionList(
-      produce((draft) => {
-        const item = draft.find((t) => t.id === id)
-        item && (item.isPublished = true)
-      })
-    )
-  }
-  const add = () => {
-    setQuestionList(
-      produce(questionList, (draft) => {
-        draft.push({
-          id: 'q' + Math.random().toString().slice(-3),
-          title: '问卷5',
-          isPublished: false,
-        })
-      })
-    )
-  }
   return (
     <div>
-      <h1>问卷列表页</h1>
-      <div>
-        {questionList.map((question) => {
-          const { id, title, isPublished } = question
-          return (
-            <QuestionCard
-              key={question.id}
-              id={id}
-              title={title}
-              isPublished={isPublished}
-              delQuestion={delQuestion}
-              publish={publish}
-            />
-          )
-        })}
+      <div className={styles.header}>
+        <div className={styles.left}>
+          <Title level={3}>问卷列表页</Title>
+        </div>
+        <div className={styles.right}>
+          <ListSearch />
+        </div>
       </div>
-      <button onClick={add}>添加问卷</button>
+
+      <div className={styles.content}>
+        {/* 问卷列表 */}
+        {questionList.length &&
+          questionList.map((question) => {
+            const { _id } = question
+            return <QuestionCard key={_id} {...question} />
+          })}
+      </div>
     </div>
   )
 }
