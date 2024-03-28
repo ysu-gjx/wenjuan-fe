@@ -10,6 +10,7 @@ import { UserAddOutlined } from '@ant-design/icons'
 import { Button, Input, Typography, Space, Form, Checkbox } from 'antd'
 import styles from './index.module.scss'
 import { REGISTER_PATHNAME } from '@/router'
+import questionApi from '@/api/question'
 
 const { Title } = Typography
 

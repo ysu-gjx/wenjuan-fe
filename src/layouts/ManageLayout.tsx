@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import styles from './ManageLayout.module.scss'
 import { Button, Space, Divider } from 'antd'
@@ -8,10 +8,28 @@ import {
   StarOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
+import questionApi from '@/api/question'
+import { message } from '@/utils/AntdGlobal'
+import { useRequest } from 'ahooks'
 
 const ManageLayout: FC = () => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  // const [loading, setLoading] = useState(false)
+
+  const { loading, run: handleCreateClick } = useRequest(
+    questionApi.createQuestionService,
+    {
+      manual: true,
+      onSuccess(res) {
+        if (res.id) {
+          navigate(`/question/edit/${res.id}`)
+          message.success('创建成功')
+        }
+      },
+    }
+  )
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -20,8 +38,8 @@ const ManageLayout: FC = () => {
             type="primary"
             size="large"
             icon={<PlusOutlined />}
-            // onClick={handleCreateClick}
-            // disabled={loading}
+            onClick={handleCreateClick}
+            disabled={loading}
           >
             新建问卷
           </Button>

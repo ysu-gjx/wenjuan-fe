@@ -94,6 +94,9 @@ module.exports = {
   ].filter(Boolean),
   devServer: {
     historyApiFallback: true,
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
   },
   output: {
     publicPath: '/',
