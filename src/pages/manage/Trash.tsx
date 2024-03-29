@@ -1,5 +1,4 @@
 import { useState, FC } from 'react'
-import QuestionCard from '@/components/QuestionCard'
 import { produce } from 'limu'
 import { Button, Empty, Spin, Typography, Table, Tag, Space } from 'antd'
 import type { TableColumnsType } from 'antd'
@@ -8,41 +7,19 @@ import { useTitle } from 'ahooks'
 import { Manage } from '@/types/api'
 import { message, modal } from '@/utils/AntdGlobal'
 import ListSearch from '@/components/ListSearch'
+import { useLoadQuestionListData } from '@/hooks/useLoadQuestionListData'
+import ListPage from '@/components/ListPage'
 
 const { Title } = Typography
 
-const rawQuestionList = [
-  {
-    _id: 'q1',
-    title: '问卷1',
-    isPublished: false,
-    isStar: true,
-    answerCount: 1,
-    createdAt: '2022-01-01 00:00:00',
-  },
-  {
-    _id: 'q2',
-    title: '问卷2',
-    isPublished: true,
-    isStar: true,
-    answerCount: 3,
-    createdAt: '2022-01-01 00:00:00',
-  },
-  {
-    _id: 'q3',
-    title: '问卷3',
-    isPublished: false,
-    isStar: true,
-    answerCount: 1,
-    createdAt: '2022-01-01 00:00:00',
-  },
-]
-
 const Trash: FC = () => {
   useTitle('yg问卷 - 问卷回收站')
-  const [list, setList] = useState(rawQuestionList)
-  const [loading] = useState(false)
+  // const [list, setList] = useState(rawQuestionList)
+  // const [loading] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  const { loading, data } = useLoadQuestionListData({ isDeleted: true })
+  const { list = [], total = 0 } = data || {}
 
   const tableColumns: TableColumnsType<Manage.QuestionDTO> = [
     {
@@ -129,6 +106,9 @@ const Trash: FC = () => {
         )}
         {!loading && list.length === 0 && <Empty description="暂无数据" />}
         {list.length > 0 && TableElem}
+      </div>
+      <div className={styles.footer}>
+        <ListPage total={total} />
       </div>
     </>
   )

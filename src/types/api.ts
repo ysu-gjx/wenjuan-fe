@@ -6,15 +6,16 @@ export interface Result<T = any> {
 
 export interface ResultData<T = any> {
   list: T[]
-  page: {
-    pageNum: number
-    pageSize: number
-    total: number | 0
-  }
+  total: number | 0
+  // page: {
+  //   pageNum: number
+  //   pageSize: number
+  //   total: number | 0
+  // }
 }
 
 export interface PageParams {
-  pageNum: number
+  page: number
   pageSize?: number
 }
 
@@ -22,6 +23,11 @@ export namespace Manage {
   export interface params {
     userName: string
     userPwd: string
+  }
+  export interface SearchOption extends PageParams {
+    keyword: string
+    isStar: boolean
+    isDeleted: boolean
   }
   export interface QuestionDTO {
     _id: string

@@ -5,40 +5,16 @@ import { Button, Empty, Spin, Typography } from 'antd'
 import styles from './common.module.scss'
 import { useTitle } from 'ahooks'
 import ListSearch from '@/components/ListSearch'
+import { useLoadQuestionListData } from '@/hooks/useLoadQuestionListData'
+import ListPage from '@/components/ListPage'
 
 const { Title } = Typography
 
-const rawQuestionList = [
-  {
-    _id: 'q1',
-    title: '问卷1',
-    isPublished: false,
-    isStar: true,
-    answerCount: 1,
-    createdAt: '2022-01-01 00:00:00',
-  },
-  {
-    _id: 'q2',
-    title: '问卷2',
-    isPublished: true,
-    isStar: true,
-    answerCount: 3,
-    createdAt: '2022-01-01 00:00:00',
-  },
-  {
-    _id: 'q3',
-    title: '问卷3',
-    isPublished: false,
-    isStar: true,
-    answerCount: 1,
-    createdAt: '2022-01-01 00:00:00',
-  },
-]
-
 const Star: FC = () => {
   useTitle('yg问卷 - 星标问卷')
-  const [list, setList] = useState(rawQuestionList)
-  const [loading] = useState(false)
+
+  const { loading, data } = useLoadQuestionListData({ isStar: true })
+  const { list = [], total = 0 } = data || {}
   return (
     <div>
       <div className={styles.header}>
@@ -62,7 +38,9 @@ const Star: FC = () => {
             return <QuestionCard key={_id} {...q} />
           })}
       </div>
-      <div className={styles.footer}>分页</div>
+      <div className={styles.footer}>
+        <ListPage total={total} />
+      </div>
     </div>
   )
 }

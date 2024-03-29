@@ -35,6 +35,12 @@ const Login: FC = () => {
   // const nav = useNavigate()
   const [form] = Form.useForm()
 
+  // useEffect(() => {
+  //   questionApi.createQuestionService({ id: 123 }).then((res) => {
+  //     console.log('res', res)
+  //   })
+  // }, [])
+
   const onFinish = (values: any) => {
     const { username, password, remember } = values || {}
     if (remember) {
