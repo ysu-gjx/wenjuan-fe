@@ -39,3 +39,13 @@ export namespace Manage {
     createdAt: string
   }
 }
+
+export namespace User {
+  export interface LoginParams {
+    username: string
+    password: string
+  }
+  export interface RegisterParams extends LoginParams {
+    nickname?: string
+  }
+}

@@ -1,16 +1,14 @@
 import { FC, useEffect } from 'react'
-import {
-  useNavigate,
-  useLocation,
-  useSearchParams,
-  Link,
-} from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import storage from '@/utils/storage'
 import { UserAddOutlined } from '@ant-design/icons'
 import { Button, Input, Typography, Space, Form, Checkbox } from 'antd'
 import styles from './index.module.scss'
-import { REGISTER_PATHNAME } from '@/router'
-import questionApi from '@/api/question'
+import { MANAGE_INDEX_PATHNAME, REGISTER_PATHNAME } from '@/router'
+import userApi from '@/api/user'
+import { useRequest } from 'ahooks'
+import { User } from '@/types/api'
+import { message } from '@/utils/AntdGlobal'
 
 const { Title } = Typography
 
@@ -32,17 +30,28 @@ const getUserInfoFromStorage = () => {
 }
 
 const Login: FC = () => {
-  // const nav = useNavigate()
+  const nav = useNavigate()
   const [form] = Form.useForm()
 
-  // useEffect(() => {
-  //   questionApi.createQuestionService({ id: 123 }).then((res) => {
-  //     console.log('res', res)
-  //   })
-  // }, [])
+  const { run, loading } = useRequest(
+    async (values: User.LoginParams) => {
+      const res = await userApi.loginService(values)
+      return res
+    },
+    {
+      manual: true,
+      onSuccess(res) {
+        storage.set('token', res.token)
+        message.success('登录成功')
+        nav(MANAGE_INDEX_PATHNAME)
+      },
+    }
+  )
 
   const onFinish = (values: any) => {
     const { username, password, remember } = values || {}
+
+    run({ username, password })
     if (remember) {
       rememberUser(username, password)
     } else {
@@ -110,7 +119,7 @@ const Login: FC = () => {
 
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
             <Space>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" disabled={loading}>
                 登录
               </Button>
               <Link to={REGISTER_PATHNAME}>注册新用户</Link>
