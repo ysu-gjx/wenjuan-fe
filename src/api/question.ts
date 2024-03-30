@@ -14,4 +14,16 @@ export default {
   getQuestionListService(opt: Partial<Manage.SearchOption>) {
     return request.get<ResultData<Manage.QuestionDTO>>('/api/question', opt)
   },
+  // 更新单个问卷
+  updateQuestionService(id: string, opt: Partial<Manage.QuestionDTO>) {
+    return request.post<string>(`/api/question/update/${id}`, opt)
+  },
+  // 复制问卷
+  duplicateQuestionService(id: string) {
+    return request.post<{ id: string }>(`/api/question/duplicate/${id}`)
+  },
+  // 批量彻底删除
+  deleteQuestionsService(ids: string[]) {
+    return request.post('/api/delete/question', { ids })
+  },
 }

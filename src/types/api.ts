@@ -34,6 +34,7 @@ export namespace Manage {
     title: string
     isPublished: boolean
     isStar: boolean
+    isDeleted?: boolean
     answerCount: number
     createdAt: string
   }

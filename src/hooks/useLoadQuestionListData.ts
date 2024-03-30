@@ -18,7 +18,7 @@ export const useLoadQuestionListData = (opt: Partial<OptionType> = {}) => {
   const { isStar, isDeleted } = opt
   const [searchParams] = useSearchParams()
 
-  const { loading, data, error } = useRequest(
+  const { loading, data, error, refresh } = useRequest(
     async () => {
       const params = {
         keyword: searchParams.get(LIST_SEARCH_PARAM_KEY) || '',
@@ -37,5 +37,5 @@ export const useLoadQuestionListData = (opt: Partial<OptionType> = {}) => {
     }
   )
 
-  return { data, loading, error }
+  return { data, loading, error, refresh }
 }

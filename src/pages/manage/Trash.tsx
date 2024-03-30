@@ -3,22 +3,24 @@ import { produce } from 'limu'
 import { Button, Empty, Spin, Typography, Table, Tag, Space } from 'antd'
 import type { TableColumnsType } from 'antd'
 import styles from './common.module.scss'
-import { useTitle } from 'ahooks'
+import { useRequest, useTitle } from 'ahooks'
 import { Manage } from '@/types/api'
 import { message, modal } from '@/utils/AntdGlobal'
 import ListSearch from '@/components/ListSearch'
 import { useLoadQuestionListData } from '@/hooks/useLoadQuestionListData'
 import ListPage from '@/components/ListPage'
+import questionApi from '@/api/question'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 
 const Trash: FC = () => {
   useTitle('yg问卷 - 问卷回收站')
-  // const [list, setList] = useState(rawQuestionList)
-  // const [loading] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const { loading, data } = useLoadQuestionListData({ isDeleted: true })
+  const { loading, data, refresh } = useLoadQuestionListData({
+    isDeleted: true,
+  })
   const { list = [], total = 0 } = data || {}
 
   const tableColumns: TableColumnsType<Manage.QuestionDTO> = [
@@ -49,9 +51,45 @@ const Trash: FC = () => {
   ]
 
   // 恢复
-  const recover = () => {}
+  const { run: recover } = useRequest(
+    async () => {
+      for await (const id of selectedIds) {
+        await questionApi.updateQuestionService(id, { isDeleted: false })
+      }
+    },
+    {
+      manual: true,
+      debounceWait: 500,
+      async onSuccess() {
+        message.success('已恢复')
+        await refresh() // 刷新列表
+        setSelectedIds([])
+      },
+    }
+  )
   // 删除
-  const del = () => {}
+  const { run: deleteQuestion } = useRequest(
+    async () => {
+      await questionApi.deleteQuestionsService(selectedIds)
+    },
+    {
+      debounceWait: 500,
+      manual: true,
+      async onSuccess() {
+        message.success('已删除')
+        await refresh() // 刷新列表
+        setSelectedIds([])
+      },
+    }
+  )
+  const del = () => {
+    modal.confirm({
+      title: '确认彻底删除该问卷？',
+      icon: <ExclamationCircleOutlined />,
+      content: '删除以后不可以找回',
+      onOk: deleteQuestion,
+    })
+  }
 
   // 可以把 JSX 片段定义为一个变量
   const TableElem = (
