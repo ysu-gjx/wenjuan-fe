@@ -4,10 +4,15 @@ import styles from './MainLayout.module.scss'
 import { Layout } from 'antd'
 import Logo from '@/components/Logo'
 import UserInfo from '@/components/UserInfo'
+import useLoadUserData from '@/hooks/useLoadUserData'
+import useNavPage from '@/hooks/useNavPage'
 
 const { Header, Content, Footer } = Layout
 
 const MainLayout: FC = () => {
+  const { waitingUserData } = useLoadUserData()
+  useNavPage(waitingUserData)
+
   return (
     <Layout>
       <Header className={styles.header}>
@@ -19,7 +24,7 @@ const MainLayout: FC = () => {
         </div>
       </Header>
       <Content className={styles.main}>
-        <Outlet />
+        {!waitingUserData && <Outlet />}
       </Content>
       <Footer className={styles.footer}>
         yg问卷 &copy;2023 - present. Created by yg

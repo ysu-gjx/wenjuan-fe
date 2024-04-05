@@ -3,13 +3,12 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Button, Typography } from 'antd'
 import styles from './index.module.scss'
 import { MANAGE_INDEX_PATHNAME } from '@/router'
-import Test from './test'
+// import Test from './test'
 
 const { Title, Paragraph } = Typography
 
 const Home: FC = () => {
   const navigate = useNavigate()
-  return <Test />
 
   return (
     <div className={styles.container}>

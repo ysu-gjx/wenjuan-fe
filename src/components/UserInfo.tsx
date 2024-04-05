@@ -1,34 +1,33 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LOGIN_PATHNAME, REGISTER_PATHNAME } from '@/router'
+import { LOGIN_PATHNAME } from '@/router'
 import { Button } from 'antd'
-import userApi from '@/api/user'
-import { useRequest } from 'ahooks'
-import { User } from '@/types/api'
+
 import { UserOutlined } from '@ant-design/icons'
 import storage from '@/utils/storage'
 import { message } from '@/utils/AntdGlobal'
-
-const checkInLogin = (pathname: string) => {
-  return pathname === LOGIN_PATHNAME || pathname === REGISTER_PATHNAME
-}
+import { useAppSelector, useAppDispatch } from '@/store/hooks'
+import { logoutReducer } from '@/store/userReducer'
+import { isLoginOrRegister } from '@/router'
 
 const UserInfo = () => {
   const { pathname } = useLocation()
   const nav = useNavigate()
+  const dispatch = useAppDispatch()
+  const { username, nickname } = useAppSelector((state) => state.user)
 
-  const { data } = useRequest(async () => {
-    if (checkInLogin(pathname)) return {} as User.RegisterParams
-    const res = await userApi.getUserInfoService()
-    return res
-  })
-  const { username, nickname } = data || {}
+  // const { data } = useRequest(async () => {
+  //   if (isLoginOrRegister(pathname)) return {} as User.RegisterParams
+  //   const res = await userApi.getUserInfoService()
+  //   return res
+  // })
+  // const { username, nickname } = data || {}
 
-  if (checkInLogin(pathname)) {
+  if (isLoginOrRegister(pathname)) {
     return null
   }
 
   function logout() {
-    // dispatch(logoutReducer)
+    dispatch(logoutReducer())
     storage.remove('token') // 清除 token 的存储
     message.success('退出成功')
     nav(LOGIN_PATHNAME)

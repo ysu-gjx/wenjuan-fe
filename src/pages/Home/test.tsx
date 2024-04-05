@@ -1,16 +1,13 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from '@/store/hooks'
 import { increment, decrement } from '@/store/count'
 
-type StateType = { count: number }
-type ActionType = { type: 'increment' | 'decrement' }
-
 const Index = () => {
-  const state = useSelector((state: StateType) => state.count)
-  const dispatch = useDispatch()
+  const state = useAppSelector((state) => state.count)
+  const dispatch = useAppDispatch()
   return (
     <>
       <p>count: {state}</p>
-      <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(increment(3))}>+</button>
       <button onClick={() => dispatch(decrement())}>-</button>
     </>
   )

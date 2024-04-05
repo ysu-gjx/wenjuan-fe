@@ -48,4 +48,8 @@ export namespace User {
   export interface RegisterParams extends LoginParams {
     nickname?: string
   }
+  export interface UserInfo {
+    username: string
+    nickname: string
+  }
 }
